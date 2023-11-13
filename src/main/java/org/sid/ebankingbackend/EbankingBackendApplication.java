@@ -15,9 +15,15 @@ import org.sid.ebankingbackend.repositories.AccountOperationRepository;
 import org.sid.ebankingbackend.repositories.BankAccountRepository;
 import org.sid.ebankingbackend.repositories.CustomerRepository;
 import org.sid.ebankingbackend.services.BankAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import java.util.Date;
 import java.util.List;
@@ -26,33 +32,36 @@ import java.util.stream.Stream;
 
 @SpringBootApplication
 public class EbankingBackendApplication {
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(EbankingBackendApplication.class, args);
     }
-//    @Bean
-    CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
-        return args -> {
-           Stream.of("Hassan","Imane","Mohamed").forEach(name->{
-               CustomerDTO customer=new CustomerDTO();
-               customer.setName(name);
-               customer.setEmail(name+"@gmail.com");
-               bankAccountService.saveCustomer(customer);
-           });
-           bankAccountService.listCustomers().forEach(customer->{
-               try {
-                   bankAccountService.saveCurrentBankAccount(Math.random()*90000,9000,customer.getId());
-                   bankAccountService.saveSavingBankAccount(Math.random()*120000,5.5,customer.getId());
 
-               } catch (CustomerNotFoundException e) {
-                   e.printStackTrace();
-               }
-           });
+    //    @Bean
+    CommandLineRunner commandLineRunner(BankAccountService bankAccountService) {
+        return args -> {
+            Stream.of("Hassan", "Imane", "Mohamed").forEach(name -> {
+                CustomerDTO customer = new CustomerDTO();
+                customer.setName(name);
+                customer.setEmail(name + "@gmail.com");
+                bankAccountService.saveCustomer(customer);
+            });
+            bankAccountService.listCustomers().forEach(customer -> {
+                try {
+                    bankAccountService.saveCurrentBankAccount(Math.random() * 90000, 9000, customer.getId());
+                    bankAccountService.saveSavingBankAccount(Math.random() * 120000, 5.5, customer.getId());
+
+                } catch (CustomerNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
             List<BankAccountDTO> bankAccounts = bankAccountService.bankAccountList();
-            for (BankAccountDTO bankAccount:bankAccounts){
-                for (int i = 0; i <10 ; i++) {
+            for (BankAccountDTO bankAccount : bankAccounts) {
+                for (int i = 0; i < 10; i++) {
                     String accountId;
-                    if(bankAccount instanceof SavingBankAccountDTO){
+                    if (bankAccount instanceof SavingBankAccountDTO) {
                         accountId=((SavingBankAccountDTO) bankAccount).getId();
                     } else{
                         accountId=((CurrentBankAccountDTO) bankAccount).getId();
@@ -96,10 +105,10 @@ public class EbankingBackendApplication {
             });
             bankAccountRepository.findAll().forEach(acc->{
                 for (int i = 0; i <10 ; i++) {
-                    AccountOperation accountOperation=new AccountOperation();
+                    AccountOperation accountOperation = new AccountOperation();
                     accountOperation.setOperationDate(new Date());
-                    accountOperation.setAmount(Math.random()*12000);
-                    accountOperation.setType(Math.random()>0.5? OperationType.DEBIT: OperationType.CREDIT);
+                    accountOperation.setAmount(Math.random() * 12000);
+                    accountOperation.setType(Math.random() > 0.5 ? OperationType.DEBIT : OperationType.CREDIT);
                     accountOperation.setBankAccount(acc);
                     accountOperationRepository.save(accountOperation);
                 }
@@ -107,6 +116,31 @@ public class EbankingBackendApplication {
             });
         };
 
+    }
+
+//    @Bean
+    CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManager) {
+        return args -> {
+//            UserDetails u1 = jdbcUserDetailsManager.loadUserByUsername("user11");
+//            if (u1 == null) {
+//                jdbcUserDetailsManager.createUser(User.withUsername("user11").
+//                        password(passwordEncoder.encode("1234")).roles("USER").build());
+//            }
+//            UserDetails u2 = jdbcUserDetailsManager.loadUserByUsername("user22");
+
+//            if (u2 == null) {
+//                jdbcUserDetailsManager.createUser(User.withUsername("user22").
+//                        password(passwordEncoder.encode("1234")).roles("USER").build());
+//            }
+//            UserDetails u3 = jdbcUserDetailsManager.loadUserByUsername("admin2");
+
+//            if (u3 == null) {
+//                jdbcUserDetailsManager.createUser(User.withUsername("admin2").
+//                        password(passwordEncoder.encode("1234")).roles("USER", "ADMIN").build());
+//            }
+
+
+        };
     }
 
 }
