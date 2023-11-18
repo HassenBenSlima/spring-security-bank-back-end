@@ -118,7 +118,7 @@ public class EbankingBackendApplication {
 
     }
 
-//    @Bean
+    @Bean
     CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManager) {
         return args -> {
 //            UserDetails u1 = jdbcUserDetailsManager.loadUserByUsername("user11");

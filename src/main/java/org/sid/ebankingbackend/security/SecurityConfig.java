@@ -39,16 +39,6 @@ public class SecurityConfig {
     @Value("${jwt.secret}")
     private String secretKey;
 
-//    @Bean
-//    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-//        PasswordEncoder passwordEncoder = passwordEncoder();
-//        return new InMemoryUserDetailsManager(
-//
-//                User.withUsername("user1").password(passwordEncoder.encode("12345")).authorities("USER").build(),
-//                User.withUsername("admin").password(passwordEncoder.encode("12345")).authorities("USER", "ADMIN").build()
-//        );
-//    }
-
     /*
     pour utilise la base de donnée montioné dans le fichier application.properties
     il faut utiliser l'objet DataSource
