@@ -14,14 +14,13 @@ import org.sid.ebankingbackend.exceptions.CustomerNotFoundException;
 import org.sid.ebankingbackend.repositories.AccountOperationRepository;
 import org.sid.ebankingbackend.repositories.BankAccountRepository;
 import org.sid.ebankingbackend.repositories.CustomerRepository;
+import org.sid.ebankingbackend.security.service.AccountService;
 import org.sid.ebankingbackend.services.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
@@ -142,5 +141,21 @@ public class EbankingBackendApplication {
 
         };
     }
+    @Bean
+    CommandLineRunner commandLineRunnerUserDetails(AccountService accountService) {
+        return args -> {
+            accountService.addNewrRole("USER");
+            accountService.addNewrRole("ADMIN");
+            accountService.addNewUser("user1", "1234", "user1@gmail.com", "1234");
+            accountService.addNewUser("user2", "1234", "user2@gmail.com", "1234");
+            accountService.addNewUser("admin", "1234", "admin@gmail.com", "1234");
+            accountService.addRoleToUser("user1", "USER");
+            accountService.addRoleToUser("user2", "USER");
+            accountService.addRoleToUser("admin", "USER");
+            accountService.addRoleToUser("admin", "ADMIN");
+
+        };
+    }
+
 
 }
